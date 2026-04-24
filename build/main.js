@@ -34,7 +34,7 @@ class HannahNotificationmanager extends utils.Adapter {
     this.on("message", this.onMessage.bind(this));
     this.on("unload", this.onUnload.bind(this));
   }
-  async onReady() {
+  onReady() {
     const { mqtt_broker, mqtt_port, mqtt_user, mqtt_pass } = this.config;
     this.mqttClient = mqtt.connect(`mqtt://${mqtt_broker}:${mqtt_port}`, {
       username: mqtt_user || void 0,
@@ -44,14 +44,14 @@ class HannahNotificationmanager extends utils.Adapter {
     });
     this.mqttClient.on("connect", () => {
       this.log.info(`MQTT verbunden: ${mqtt_broker}:${mqtt_port}`);
-      this.setState("info.connection", true, true);
+      void this.setState("info.connection", true, true);
     });
     this.mqttClient.on("error", (err) => {
       this.log.error(`MQTT Fehler: ${err.message}`);
-      this.setState("info.connection", false, true);
+      void this.setState("info.connection", false, true);
     });
     this.mqttClient.on("close", () => {
-      this.setState("info.connection", false, true);
+      void this.setState("info.connection", false, true);
     });
   }
   /**
@@ -71,7 +71,9 @@ class HannahNotificationmanager extends utils.Adapter {
   }
   onMessage(obj) {
     var _a, _b, _c;
-    if (!obj || obj.command !== "sendNotification") return;
+    if (!obj || obj.command !== "sendNotification") {
+      return;
+    }
     this.log.debug(`sendNotification: ${JSON.stringify(obj.message)}`);
     const notification = obj.message;
     const text = this.extractText(notification);
@@ -112,16 +114,28 @@ class HannahNotificationmanager extends utils.Adapter {
       const parts = [];
       for (const data of Object.values(instances)) {
         for (const msg of (_d = data.messages) != null ? _d : []) {
-          if (msg.message) parts.push(msg.message);
+          if (msg.message) {
+            parts.push(msg.message);
+          }
         }
       }
-      if (parts.length) return parts.join(". ");
+      if (parts.length) {
+        return parts.join(". ");
+      }
       const desc = (_e = notification == null ? void 0 : notification.category) == null ? void 0 : _e.description;
-      if (typeof desc === "string") return desc;
-      if (desc && typeof desc === "object") return (_g = (_f = desc.de) != null ? _f : desc.en) != null ? _g : null;
+      if (typeof desc === "string") {
+        return desc;
+      }
+      if (desc && typeof desc === "object") {
+        return (_g = (_f = desc.de) != null ? _f : desc.en) != null ? _g : null;
+      }
       const name = (_h = notification == null ? void 0 : notification.category) == null ? void 0 : _h.name;
-      if (typeof name === "string") return name;
-      if (name && typeof name === "object") return (_j = (_i = name.de) != null ? _i : name.en) != null ? _j : null;
+      if (typeof name === "string") {
+        return name;
+      }
+      if (name && typeof name === "object") {
+        return (_j = (_i = name.de) != null ? _i : name.en) != null ? _j : null;
+      }
     } catch (e) {
       this.log.warn(`Text-Extraktion fehlgeschlagen: ${e.message}`);
     }
