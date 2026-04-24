@@ -1,0 +1,7 @@
+{
+    "option_broker": "MQTT-брокер (хост/IP)",
+    "option_broker_pass": "MQTT-пароль",
+    "option_broker_port": "MQTT-порт",
+    "option_broker_user": "Имя пользователя MQTT",
+    "option_mqtt_topic": "Ханна Тема MQTT"
+}

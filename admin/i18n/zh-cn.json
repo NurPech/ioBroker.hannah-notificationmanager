@@ -1,0 +1,7 @@
+{
+    "option_broker": "MQTT 代理（主机/IP）",
+    "option_broker_pass": "MQTT 密码",
+    "option_broker_port": "MQTT 端口",
+    "option_broker_user": "MQTT 用户名",
+    "option_mqtt_topic": "汉娜 MQTT 主题"
+}

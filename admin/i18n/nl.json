@@ -1,0 +1,7 @@
+{
+    "option_broker": "MQTT-makelaar (host/IP)",
+    "option_broker_pass": "MQTT-wachtwoord",
+    "option_broker_port": "MQTT-poort",
+    "option_broker_user": "MQTT-gebruikersnaam",
+    "option_mqtt_topic": "Hannah MQTT-onderwerp"
+}

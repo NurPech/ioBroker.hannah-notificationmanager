@@ -1,0 +1,7 @@
+{
+    "option_broker": "Courtier MQTT (hôte/IP)",
+    "option_broker_pass": "Mot de passe MQTT",
+    "option_broker_port": "Port MQTT",
+    "option_broker_user": "Nom d'utilisateur MQTT",
+    "option_mqtt_topic": "Hannah Sujet MQTT"
+}

@@ -1,0 +1,44 @@
+{
+    "i18n": true,
+    "type": "panel",
+    "items": {
+        "mqtt_broker": {
+            "type": "text",
+            "label": "option_broker",
+            "sm": 12,
+            "md": 6
+        },
+        "mqtt_port": {
+            "type": "number",
+            "label": "option_broker_port",
+            "sm": 12,
+            "md": 2,
+            "min": 1,
+            "max": 65535
+        },
+        "_divider": {
+            "type": "divider"
+        },
+        "mqtt_user": {
+            "type": "text",
+            "label": "option_broker_user",
+            "sm": 12,
+            "md": 6
+        },
+        "mqtt_pass": {
+            "type": "password",
+            "label": "option_broker_pass",
+            "sm": 12,
+            "md": 6
+        },
+        "_divider2": {
+            "type": "divider"
+        },
+        "hannah_topic": {
+            "type": "text",
+            "label": "option_mqtt_topic",
+            "sm": 12,
+            "md": 6
+        }
+    }
+}
