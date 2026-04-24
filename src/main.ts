@@ -5,8 +5,8 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
-import * as mqtt from "mqtt";
-import type { MqttClient } from "mqtt";
+import * as mqtt from 'mqtt';
+import type { MqttClient } from 'mqtt';
 
 interface NotificationMessage {
     category?: {
@@ -18,7 +18,6 @@ interface NotificationMessage {
     instances?: Record<string, { messages?: Array<{ message?: string }> }>;
 }
 
-
 class HannahNotificationmanager extends utils.Adapter {
     private mqttClient: MqttClient | null = null;
 
@@ -28,12 +27,11 @@ class HannahNotificationmanager extends utils.Adapter {
             name: 'hannah-notificationmanager',
         });
         this.on('ready', this.onReady.bind(this));
-        // this.on('objectChange', this.onObjectChange.bind(this));
         this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
     }
 
-    private async onReady(): Promise<void> {
+    private onReady(): void {
         const { mqtt_broker, mqtt_port, mqtt_user, mqtt_pass } = this.config;
 
         this.mqttClient = mqtt.connect(`mqtt://${mqtt_broker}:${mqtt_port}`, {
@@ -43,16 +41,16 @@ class HannahNotificationmanager extends utils.Adapter {
             reconnectPeriod: 5000,
         });
 
-        this.mqttClient.on("connect", () => {
+        this.mqttClient.on('connect', () => {
             this.log.info(`MQTT verbunden: ${mqtt_broker}:${mqtt_port}`);
-            this.setState("info.connection", true, true);
+            void this.setState('info.connection', true, true);
         });
-        this.mqttClient.on("error", (err: Error) => {
+        this.mqttClient.on('error', (err: Error) => {
             this.log.error(`MQTT Fehler: ${err.message}`);
-            this.setState("info.connection", false, true);
+            void this.setState('info.connection', false, true);
         });
-        this.mqttClient.on("close", () => {
-            this.setState("info.connection", false, true);
+        this.mqttClient.on('close', () => {
+            void this.setState('info.connection', false, true);
         });
     }
 
@@ -64,30 +62,31 @@ class HannahNotificationmanager extends utils.Adapter {
     private onUnload(callback: () => void): void {
         try {
             this.mqttClient?.end();
-
             callback();
         } catch (error) {
             this.log.error(`Error during unloading: ${(error as Error).message}`);
             callback();
         }
     }
-    
+
     public onMessage(obj: ioBroker.Message): void {
-        if (!obj || obj.command !== "sendNotification") return;
+        if (!obj || obj.command !== 'sendNotification') {
+            return;
+        }
 
         this.log.debug(`sendNotification: ${JSON.stringify(obj.message)}`);
         const notification = obj.message as NotificationMessage | undefined;
         const text = this.extractText(notification);
 
         if (!text) {
-            this.log.warn("Notification ohne Text empfangen — ignoriert.");
+            this.log.warn('Notification ohne Text empfangen — ignoriert.');
             if (obj.callback) {
-                this.sendTo(obj.from, obj.command, { sent: false, error: "Kein Text" }, obj.callback);
+                this.sendTo(obj.from, obj.command, { sent: false, error: 'Kein Text' }, obj.callback);
             }
             return;
         }
 
-        const severity = notification?.category?.severity ?? "notify";
+        const severity = notification?.category?.severity ?? 'notify';
         const payload = JSON.stringify({ text, severity });
 
         if (this.mqttClient?.connected) {
@@ -105,9 +104,9 @@ class HannahNotificationmanager extends utils.Adapter {
                 }
             });
         } else {
-            this.log.warn("MQTT nicht verbunden — Notification verworfen.");
+            this.log.warn('MQTT nicht verbunden — Notification verworfen.');
             if (obj.callback) {
-                this.sendTo(obj.from, obj.command, { sent: false, error: "MQTT nicht verbunden" }, obj.callback);
+                this.sendTo(obj.from, obj.command, { sent: false, error: 'MQTT nicht verbunden' }, obj.callback);
             }
         }
     }
@@ -118,26 +117,40 @@ class HannahNotificationmanager extends utils.Adapter {
             const parts: string[] = [];
             for (const data of Object.values(instances)) {
                 for (const msg of data.messages ?? []) {
-                    if (msg.message) parts.push(msg.message);
+                    if (msg.message) {
+                        parts.push(msg.message);
+                    }
                 }
             }
-            if (parts.length) return parts.join(". ");
+            if (parts.length) {
+                return parts.join('. ');
+            }
 
             const desc = notification?.category?.description;
-            if (typeof desc === "string") return desc;
-            if (desc && typeof desc === "object") return desc.de ?? desc.en ?? null;
+            if (typeof desc === 'string') {
+                return desc;
+            }
+            if (desc && typeof desc === 'object') {
+                return desc.de ?? desc.en ?? null;
+            }
 
             const name = notification?.category?.name;
-            if (typeof name === "string") return name;
-            if (name && typeof name === "object") return name.de ?? name.en ?? null;
+            if (typeof name === 'string') {
+                return name;
+            }
+            if (name && typeof name === 'object') {
+                return name.de ?? name.en ?? null;
+            }
         } catch (e) {
             this.log.warn(`Text-Extraktion fehlgeschlagen: ${(e as Error).message}`);
         }
         return null;
     }
 }
+
 if (require.main !== module) {
-    module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new HannahNotificationmanager(options);
+    module.exports = (options: Partial<utils.AdapterOptions> | undefined): HannahNotificationmanager =>
+        new HannahNotificationmanager(options);
 } else {
     (() => new HannahNotificationmanager())();
 }
