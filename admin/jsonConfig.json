@@ -5,14 +5,20 @@
         "mqtt_broker": {
             "type": "text",
             "label": "option_broker",
+            "xs": 12,
             "sm": 12,
-            "md": 6
+            "md": 6,
+            "lg": 6,
+            "xl": 6
         },
         "mqtt_port": {
             "type": "number",
             "label": "option_broker_port",
+            "xs": 12,
             "sm": 12,
             "md": 2,
+            "lg": 2,
+            "xl": 2,
             "min": 1,
             "max": 65535
         },
@@ -22,14 +28,20 @@
         "mqtt_user": {
             "type": "text",
             "label": "option_broker_user",
+            "xs": 12,
             "sm": 12,
-            "md": 6
+            "md": 6,
+            "lg": 6,
+            "xl": 6
         },
         "mqtt_pass": {
             "type": "password",
             "label": "option_broker_pass",
+            "xs": 12,
             "sm": 12,
-            "md": 6
+            "md": 6,
+            "lg": 6,
+            "xl": 6
         },
         "_divider2": {
             "type": "divider"
@@ -37,8 +49,11 @@
         "hannah_topic": {
             "type": "text",
             "label": "option_mqtt_topic",
+            "xs": 12,
             "sm": 12,
-            "md": 6
+            "md": 6,
+            "lg": 6,
+            "xl": 6
         }
     }
 }

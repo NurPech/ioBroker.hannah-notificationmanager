@@ -108,7 +108,7 @@ Please refer to the [`dev-server` documentation](https://github.com/ioBroker/dev
     ### **WORK IN PROGRESS**
 -->
 
-### **WORK IN PROGRESS**
+### 0.0.1 (2026-04-25)
 * (M1kad0) initial release
 
 ## License
