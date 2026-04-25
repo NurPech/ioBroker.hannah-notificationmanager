@@ -1,17 +1,35 @@
-# Configure here which dependency updates should be merged automatically.
-# The recommended configuration is the following:
-- match:
-    # Only merge patches for production dependencies
-    dependency_type: production
-    update_type: "semver:patch"
-- match:
-    # Except for security fixes, here we allow minor patches
-    dependency_type: production
-    update_type: "security:minor"
-- match:
-    # and development dependencies can have a minor update, too
-    dependency_type: development
-    update_type: "semver:minor"
+# Workflow for auto-merging Dependabot PRs
+# This workflow uses the action-automerge-dependabot action to automatically merge
+# Dependabot PRs based on the rules defined in .github/auto-merge.yml
 
-# The syntax is based on the legacy dependabot v1 automerged_updates syntax, see:
-# https://dependabot.com/docs/config-file/#automerged_updates
+name: Auto-Merge Dependabot PRs
+
+on:
+  # Trigger when a PR is opened or updated
+  # WARNING: This needs to be run in the PR base, DO NOT build untrusted code in this action
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    # Only run if actor is dependabot
+    if: github.actor == 'dependabot[bot]'
+    
+    permissions:
+      contents: write
+      pull-requests: write
+      
+    steps:
+      - name: Auto-merge Dependabot PRs
+        uses: iobroker-bot-orga/action-automerge-dependabot@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: Path to your auto-merge configuration file
+          # config-file-path: '.github/auto-merge.yml'
+          # Optional: Merge method (merge, squash, or rebase)
+          # merge-method: 'squash'
+          # Optional: Wait for other checks to complete
+          # wait-for-checks: 'true'
+          # Optional: Maximum time to wait for checks in seconds (default: 3600)
+          # max-wait-time: '3600'
