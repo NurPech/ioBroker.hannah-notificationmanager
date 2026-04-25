@@ -10,6 +10,7 @@
   "homepage": "https://github.com/NurPech/ioBroker.hannah-notificationmanager",
   "license": "MIT",
   "keywords": [
+    "ioBroker",
     "hannah",
     "notification",
     "tts",
