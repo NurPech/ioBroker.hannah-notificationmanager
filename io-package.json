@@ -17,6 +17,7 @@
                 "zh-cn": "首次出版"
             }
         },
+        "messagebox": true,
         "titleLang": {
             "en": "Hannah - Notification Manager",
             "de": "Hannah – Benachrichtigungsmanagerin",
