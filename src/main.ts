@@ -69,8 +69,45 @@ class HannahNotificationmanager extends utils.Adapter {
         }
     }
 
+    /** @inheritdoc */
     public onMessage(obj: ioBroker.Message): void {
-        if (!obj || obj.command !== 'sendNotification') {
+        if (!obj) {
+            return;
+        }
+
+        if (obj.command === 'sendDirect') {
+            const { text, severity = 'notify' } = (obj.message ?? {}) as {
+                text?: string;
+                severity?: string;
+            };
+            if (!text) {
+                if (obj.callback) {
+                    this.sendTo(obj.from, obj.command, { sent: false, error: 'Kein Text' }, obj.callback);
+                }
+                return;
+            }
+            const payload = JSON.stringify({ type: 'direct', text, severity });
+            if (this.mqttClient?.connected) {
+                this.mqttClient.publish(this.config.hannah_topic, payload, { qos: 1 }, (err?: Error) => {
+                    if (obj.callback) {
+                        this.sendTo(
+                            obj.from,
+                            obj.command,
+                            err ? { sent: false, error: err.message } : { sent: true },
+                            obj.callback,
+                        );
+                    }
+                });
+            } else {
+                this.log.warn('MQTT nicht verbunden — Direct-Notification verworfen.');
+                if (obj.callback) {
+                    this.sendTo(obj.from, obj.command, { sent: false, error: 'MQTT nicht verbunden' }, obj.callback);
+                }
+            }
+            return;
+        }
+
+        if (obj.command !== 'sendNotification') {
             return;
         }
 
