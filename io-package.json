@@ -99,7 +99,7 @@
             "_id": "info.connection",
             "type": "state",
             "common": {
-                "name": "MQTT verbunden",
+                "name": "MQTT connected",
                 "type": "boolean",
                 "role": "indicator.connected",
                 "read": true,
