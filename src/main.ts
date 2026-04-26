@@ -42,11 +42,11 @@ class HannahNotificationmanager extends utils.Adapter {
         });
 
         this.mqttClient.on('connect', () => {
-            this.log.info(`MQTT verbunden: ${mqtt_broker}:${mqtt_port}`);
+            this.log.info(`MQTT connected: ${mqtt_broker}:${mqtt_port}`);
             void this.setState('info.connection', true, true);
         });
         this.mqttClient.on('error', (err: Error) => {
-            this.log.error(`MQTT Fehler: ${err.message}`);
+            this.log.error(`MQTT error: ${err.message}`);
             void this.setState('info.connection', false, true);
         });
         this.mqttClient.on('close', () => {
@@ -82,7 +82,7 @@ class HannahNotificationmanager extends utils.Adapter {
             };
             if (!text) {
                 if (obj.callback) {
-                    this.sendTo(obj.from, obj.command, { sent: false, error: 'Kein Text' }, obj.callback);
+                    this.sendTo(obj.from, obj.command, { sent: false, error: 'no payload' }, obj.callback);
                 }
                 return;
             }
@@ -99,9 +99,9 @@ class HannahNotificationmanager extends utils.Adapter {
                     }
                 });
             } else {
-                this.log.warn('MQTT nicht verbunden — Direct-Notification verworfen.');
+                this.log.warn('MQTT disconnected — Direct-Notification dropped.');
                 if (obj.callback) {
-                    this.sendTo(obj.from, obj.command, { sent: false, error: 'MQTT nicht verbunden' }, obj.callback);
+                    this.sendTo(obj.from, obj.command, { sent: false, error: 'MQTT not connected' }, obj.callback);
                 }
             }
             return;
@@ -116,9 +116,9 @@ class HannahNotificationmanager extends utils.Adapter {
         const text = this.extractText(notification);
 
         if (!text) {
-            this.log.warn('Notification ohne Text empfangen — ignoriert.');
+            this.log.warn('Received notification without content — ignored.');
             if (obj.callback) {
-                this.sendTo(obj.from, obj.command, { sent: false, error: 'Kein Text' }, obj.callback);
+                this.sendTo(obj.from, obj.command, { sent: false, error: 'no payload' }, obj.callback);
             }
             return;
         }
@@ -129,7 +129,7 @@ class HannahNotificationmanager extends utils.Adapter {
         if (this.mqttClient?.connected) {
             this.mqttClient.publish(this.config.hannah_topic, payload, { qos: 1 }, (err?: Error) => {
                 if (err) {
-                    this.log.error(`Publish fehlgeschlagen: ${err.message}`);
+                    this.log.error(`Failed to publish message: ${err.message}`);
                     if (obj.callback) {
                         this.sendTo(obj.from, obj.command, { sent: false, error: err.message }, obj.callback);
                     }
@@ -141,9 +141,9 @@ class HannahNotificationmanager extends utils.Adapter {
                 }
             });
         } else {
-            this.log.warn('MQTT nicht verbunden — Notification verworfen.');
+            this.log.warn('MQTT not connected — notification discarded.');
             if (obj.callback) {
-                this.sendTo(obj.from, obj.command, { sent: false, error: 'MQTT nicht verbunden' }, obj.callback);
+                this.sendTo(obj.from, obj.command, { sent: false, error: 'MQTT not connected' }, obj.callback);
             }
         }
     }
@@ -179,7 +179,7 @@ class HannahNotificationmanager extends utils.Adapter {
                 return name.de ?? name.en ?? null;
             }
         } catch (e) {
-            this.log.warn(`Text-Extraktion fehlgeschlagen: ${(e as Error).message}`);
+            this.log.warn(`Failed to extract text: ${(e as Error).message}`);
         }
         return null;
     }
