@@ -43,11 +43,11 @@ class HannahNotificationmanager extends utils.Adapter {
       reconnectPeriod: 5e3
     });
     this.mqttClient.on("connect", () => {
-      this.log.info(`MQTT verbunden: ${mqtt_broker}:${mqtt_port}`);
+      this.log.info(`MQTT connected: ${mqtt_broker}:${mqtt_port}`);
       void this.setState("info.connection", true, true);
     });
     this.mqttClient.on("error", (err) => {
-      this.log.error(`MQTT Fehler: ${err.message}`);
+      this.log.error(`MQTT error: ${err.message}`);
       void this.setState("info.connection", false, true);
     });
     this.mqttClient.on("close", () => {
@@ -69,27 +69,59 @@ class HannahNotificationmanager extends utils.Adapter {
       callback();
     }
   }
+  /** @inheritdoc */
   onMessage(obj) {
-    var _a, _b, _c;
-    if (!obj || obj.command !== "sendNotification") {
+    var _a, _b, _c, _d, _e;
+    if (!obj) {
+      return;
+    }
+    if (obj.command === "sendDirect") {
+      const { text: text2, severity: severity2 = "notify" } = (_a = obj.message) != null ? _a : {};
+      if (!text2) {
+        if (obj.callback) {
+          this.sendTo(obj.from, obj.command, { sent: false, error: "no payload" }, obj.callback);
+        }
+        return;
+      }
+      const payload2 = JSON.stringify({ type: "direct", text: text2, severity: severity2 });
+      if ((_b = this.mqttClient) == null ? void 0 : _b.connected) {
+        this.mqttClient.publish(this.config.hannah_topic, payload2, { qos: 1 }, (err) => {
+          if (obj.callback) {
+            this.sendTo(
+              obj.from,
+              obj.command,
+              err ? { sent: false, error: err.message } : { sent: true },
+              obj.callback
+            );
+          }
+        });
+      } else {
+        this.log.warn("MQTT disconnected \u2014 Direct-Notification dropped.");
+        if (obj.callback) {
+          this.sendTo(obj.from, obj.command, { sent: false, error: "MQTT not connected" }, obj.callback);
+        }
+      }
+      return;
+    }
+    if (obj.command !== "sendNotification") {
       return;
     }
     this.log.debug(`sendNotification: ${JSON.stringify(obj.message)}`);
     const notification = obj.message;
     const text = this.extractText(notification);
     if (!text) {
-      this.log.warn("Notification ohne Text empfangen \u2014 ignoriert.");
+      this.log.warn("Received notification without content \u2014 ignored.");
       if (obj.callback) {
-        this.sendTo(obj.from, obj.command, { sent: false, error: "Kein Text" }, obj.callback);
+        this.sendTo(obj.from, obj.command, { sent: false, error: "no payload" }, obj.callback);
       }
       return;
     }
-    const severity = (_b = (_a = notification == null ? void 0 : notification.category) == null ? void 0 : _a.severity) != null ? _b : "notify";
+    const severity = (_d = (_c = notification == null ? void 0 : notification.category) == null ? void 0 : _c.severity) != null ? _d : "notify";
     const payload = JSON.stringify({ text, severity });
-    if ((_c = this.mqttClient) == null ? void 0 : _c.connected) {
+    if ((_e = this.mqttClient) == null ? void 0 : _e.connected) {
       this.mqttClient.publish(this.config.hannah_topic, payload, { qos: 1 }, (err) => {
         if (err) {
-          this.log.error(`Publish fehlgeschlagen: ${err.message}`);
+          this.log.error(`Failed to publish message: ${err.message}`);
           if (obj.callback) {
             this.sendTo(obj.from, obj.command, { sent: false, error: err.message }, obj.callback);
           }
@@ -101,9 +133,9 @@ class HannahNotificationmanager extends utils.Adapter {
         }
       });
     } else {
-      this.log.warn("MQTT nicht verbunden \u2014 Notification verworfen.");
+      this.log.warn("MQTT not connected \u2014 notification discarded.");
       if (obj.callback) {
-        this.sendTo(obj.from, obj.command, { sent: false, error: "MQTT nicht verbunden" }, obj.callback);
+        this.sendTo(obj.from, obj.command, { sent: false, error: "MQTT not connected" }, obj.callback);
       }
     }
   }
@@ -137,7 +169,7 @@ class HannahNotificationmanager extends utils.Adapter {
         return (_j = (_i = name.de) != null ? _i : name.en) != null ? _j : null;
       }
     } catch (e) {
-      this.log.warn(`Text-Extraktion fehlgeschlagen: ${e.message}`);
+      this.log.warn(`Failed to extract text: ${e.message}`);
     }
     return null;
   }

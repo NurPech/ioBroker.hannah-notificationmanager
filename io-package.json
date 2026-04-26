@@ -1,112 +1,125 @@
 {
-    "common": {
-        "name": "hannah-notificationmanager",
-        "version": "0.0.1",
-        "news": {
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "uk": "Початкова версія",
-                "zh-cn": "首次出版"
-            }
-        },
-        "messagebox": true,
-        "titleLang": {
-            "en": "Hannah - Notification Manager",
-            "de": "Hannah – Benachrichtigungsmanagerin",
-            "ru": "Ханна - Менеджер уведомлений",
-            "pt": "Hannah - Gerente de Notificações",
-            "nl": "Hannah - Meldingsmanager",
-            "fr": "Hannah - Gestionnaire de notifications",
-            "it": "Hannah - Responsabile delle notifiche",
-            "es": "Hannah - Gerente de notificaciones",
-            "pl": "Hannah – menedżer powiadomień",
-            "uk": "Ханна - менеджер повідомлень",
-            "zh-cn": "汉娜 - 通知经理"
-        },
-        "desc": {
-            "en": "Forwards notifications from the ioBroker Notification Manager to Hannah via MQTT",
-            "de": "Leitet Notifications vom ioBroker Notification Manager per MQTT an Hannah weiter",
-            "ru": "Пересылает уведомления от диспетчера уведомлений ioBroker Ханне через MQTT.",
-            "pt": "Encaminha notificações do ioBroker Notification Manager para Hannah via MQTT",
-            "nl": "Stuurt meldingen van de ioBroker Notification Manager door naar Hannah via MQTT",
-            "fr": "Transfère les notifications du gestionnaire de notifications ioBroker à Hannah via MQTT",
-            "it": "Inoltra le notifiche da ioBroker Notification Manager a Hannah tramite MQTT",
-            "es": "Reenvía notificaciones desde ioBroker Notification Manager a Hannah a través de MQTT",
-            "pl": "Przesyła powiadomienia z menedżera powiadomień ioBroker do Hannah za pośrednictwem protokołu MQTT",
-            "uk": "Пересилає сповіщення від диспетчера сповіщень ioBroker Ханні через MQTT",
-            "zh-cn": "通过 MQTT 将通知从 ioBroker 通知管理器转发到 Hannah"
-        },
-        "authors": [
-            "M1kad0 <leonie+iobroker@sgessinger.de>"
-        ],
-        "keywords": [
-            "hannah",
-            "notification",
-            "tts",
-            "mqtt"
-        ],
-        "licenseInformation": {
-            "type": "free",
-            "license": "MIT"
-        },
-        "platform": "Javascript/Node.js",
-        "icon": "hannah-notificationmanager.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/NurPech/ioBroker.hannah-notificationmanager/main/admin/hannah-notificationmanager.png",
-        "readme": "https://github.com/NurPech/ioBroker.hannah-notificationmanager/blob/main/README.md",
-        "loglevel": "info",
-        "tier": 3,
-        "mode": "daemon",
-        "type": "protocols",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "push",
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=6.0.11"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=7.6.20"
-            }
-        ],
-        "supportedMessages": {
-            "notifications": true
-        }
+  "common": {
+    "name": "hannah-notificationmanager",
+    "version": "0.0.2",
+    "news": {
+      "0.0.2": {
+        "en": "added sendDirect support via messagebox\nfixed type routing for direct notifications\nimplement best practices",
+        "de": "sendDirect-Unterstützung über messagebox\nfestnetz für direkte meldungen\nbest practices anwenden",
+        "ru": "добавлена поддержка sendDirect через почтовый ящик\nфиксированная маршрутизация для прямых уведомлений\nвнедрение передовой практики",
+        "pt": "adicionou o suporte sendDirect via caixa de mensagens\nroteamento de tipo fixo para notificações diretas\naplicar as melhores práticas",
+        "nl": "toegevoegde sendDirect support via messagebox\nvast type routering voor directe meldingen\nbeste praktijken toepassen",
+        "fr": "ajout du support sendDirect via la boîte à messages\nroutage de type fixe pour les notifications directes\nmettre en œuvre les meilleures pratiques",
+        "it": "supporto sendDirect tramite messaggiobox\nrouting di tipo fisso per le notifiche dirette\nimplementare le migliori pratiche",
+        "es": "añadido sendDirect support via messagebox\nde tipo fijo para notificaciones directas\naplicar las mejores prácticas",
+        "pl": "dodany sendDirect wsparcie poprzez messagebox\nstałe routing typu dla zgłoszeń bezpośrednich\nwdrażanie najlepszych praktyk",
+        "uk": "додано підтримку через поштову скриньку\nфіксований тип маршрутизації для прямих повідомлень\nвпроваджувати кращі практики",
+        "zh-cn": "通过信息箱添加 Direct 支持\n直接通知的固定类型路由\n执行最佳做法"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "uk": "Початкова версія",
+        "zh-cn": "首次出版"
+      }
     },
-    "native": {
-        "mqtt_broker": "localhost",
-        "mqtt_port": 1883,
-        "mqtt_user": "",
-        "mqtt_pass": "",
-        "hannah_topic": "hannah/notification"
+    "messagebox": true,
+    "titleLang": {
+      "en": "Hannah - Notification Manager",
+      "de": "Hannah – Benachrichtigungsmanagerin",
+      "ru": "Ханна - Менеджер уведомлений",
+      "pt": "Hannah - Gerente de Notificações",
+      "nl": "Hannah - Meldingsmanager",
+      "fr": "Hannah - Gestionnaire de notifications",
+      "it": "Hannah - Responsabile delle notifiche",
+      "es": "Hannah - Gerente de notificaciones",
+      "pl": "Hannah – menedżer powiadomień",
+      "uk": "Ханна - менеджер повідомлень",
+      "zh-cn": "汉娜 - 通知经理"
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "name": "MQTT connected",
-                "type": "boolean",
-                "role": "indicator.connected",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        }
-    ]
+    "desc": {
+      "en": "Forwards notifications from the ioBroker Notification Manager to Hannah via MQTT",
+      "de": "Leitet Notifications vom ioBroker Notification Manager per MQTT an Hannah weiter",
+      "ru": "Пересылает уведомления от диспетчера уведомлений ioBroker Ханне через MQTT.",
+      "pt": "Encaminha notificações do ioBroker Notification Manager para Hannah via MQTT",
+      "nl": "Stuurt meldingen van de ioBroker Notification Manager door naar Hannah via MQTT",
+      "fr": "Transfère les notifications du gestionnaire de notifications ioBroker à Hannah via MQTT",
+      "it": "Inoltra le notifiche da ioBroker Notification Manager a Hannah tramite MQTT",
+      "es": "Reenvía notificaciones desde ioBroker Notification Manager a Hannah a través de MQTT",
+      "pl": "Przesyła powiadomienia z menedżera powiadomień ioBroker do Hannah za pośrednictwem protokołu MQTT",
+      "uk": "Пересилає сповіщення від диспетчера сповіщень ioBroker Ханні через MQTT",
+      "zh-cn": "通过 MQTT 将通知从 ioBroker 通知管理器转发到 Hannah"
+    },
+    "authors": [
+      "M1kad0 <leonie+iobroker@sgessinger.de>"
+    ],
+    "keywords": [
+      "hannah",
+      "notification",
+      "tts",
+      "mqtt"
+    ],
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
+    "platform": "Javascript/Node.js",
+    "icon": "hannah-notificationmanager.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/NurPech/ioBroker.hannah-notificationmanager/main/admin/hannah-notificationmanager.png",
+    "readme": "https://github.com/NurPech/ioBroker.hannah-notificationmanager/blob/main/README.md",
+    "loglevel": "info",
+    "tier": 3,
+    "mode": "daemon",
+    "type": "protocols",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "push",
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.6.20"
+      }
+    ],
+    "supportedMessages": {
+      "notifications": true
+    }
+  },
+  "native": {
+    "mqtt_broker": "localhost",
+    "mqtt_port": 1883,
+    "mqtt_user": "",
+    "mqtt_pass": "",
+    "hannah_topic": "hannah/notification"
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "name": "MQTT connected",
+        "type": "boolean",
+        "role": "indicator.connected",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }

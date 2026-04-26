@@ -103,8 +103,7 @@ The ioBroker.admin interface will then be available at http://localhost:undefine
 Please refer to the [`dev-server` documentation](https://github.com/ioBroker/dev-server#command-line) for more details.
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 0.0.2 (2026-04-26)
 * (M1kad0) added sendDirect support via messagebox
 * (M1kad0) fixed type routing for direct notifications
 * (M1kad0) implement best practices

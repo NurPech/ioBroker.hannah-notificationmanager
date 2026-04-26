@@ -1,6 +1,6 @@
 {
   "name": "iobroker.hannah-notificationmanager",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Leitet Notifications vom ioBroker Notification Manager per MQTT an Hannah weiter",
   "author": {
     "name": "M1kad0",
